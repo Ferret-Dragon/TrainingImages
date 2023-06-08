@@ -1,10 +1,3 @@
-<style>
-.green{
-    color:green;
-    sont-size:30px;
-}
-</style>
-
 <div class="green">
 
 # TRAININGIMAGES  
@@ -15,3 +8,10 @@ Open images from a directory and determine whether they contain a specific featu
 
 
 </div>
+
+<style>
+.green{
+    color:green;
+    sont-size:30px;
+}
+</style>
