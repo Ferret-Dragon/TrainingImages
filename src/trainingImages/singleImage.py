@@ -3,7 +3,7 @@ import cv2 as cv
 import sys
 import os
 
-from src.FileOperationsFunction import sendTo
+from src.trainingImages.FileOperationsFunction import sendTo
 
 imageData = "/Users/ferretdragon/Documents/Eye_to_Eye/facelessImageData.txt"
 allContent = []
