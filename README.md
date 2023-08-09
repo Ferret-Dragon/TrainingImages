@@ -5,7 +5,8 @@
 ### Purpose:  
 Open images from a directory and determine whether they contain a specific feature that the user is looking for 
 
-
+### Installation:
+pip install trainingimages
 
 </div>
 
