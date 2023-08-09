@@ -3,9 +3,22 @@ import cv2 as cv
 import sys
 import os
 
-from src.trainingImages.FileOperationsFunction import sendTo
+"""from src.trainingImages.FileOperationsFunction import sendTo"""
+from FileOperationsFunction import sendTo
 
-imageData = "/Users/ferretdragon/Documents/Eye_to_Eye/facelessImageData.txt"
+fileLocationThatContainsImageData = ''
+
+while not os.path.exists(fileLocationThatContainsImageData):
+    # Data file should be the path to the txt file in which the image locations are stored
+    print("Enter the name of your image data file: ")
+    fileLocationThatContainsImageData = input()
+    if not os.path.exists(fileLocationThatContainsImageData):
+        print("You source path does not exist")
+
+print("\nEnter your destination folder location: ")
+#The folder where we want to move the images into
+destination = input()
+
 allContent = []
 
 def addContentToList(file_path):
@@ -16,13 +29,17 @@ def addContentToList(file_path):
         tempList.append((ast.literal_eval(line)))
     tempFile.close()
     return tempList
-allContent = addContentToList(imageData)
 
-def whenFeatureNotFound(e):
+allContent = addContentToList(fileLocationThatContainsImageData)
+
+def manuallySortThroughImages(listOfImagesToFilterThrough):
+    '''We are expecting to be passed a list of lists formated with features [[a,b,c, imageLocationPathway], ...]'''
     for imageListData in allContent:
-        if not os.path.exists(imageListData[3]):
+
+        currentImagePathway = imageListData[3]
+        if not os.path.exists(currentImagePathway):
             continue
-        img = cv.imread(imageListData[3])
+        img = cv.imread(currentImagePathway)
         cv.imshow("image", img)
 
         while 1:
@@ -31,13 +48,14 @@ def whenFeatureNotFound(e):
                 cv.destroyAllWindows()
                 break
             elif key == ord("m"):
-                print(imageListData[3])
-                print(type(imageListData[3]))
-                with open("/Users/ferretdragon/Documents/Eye_to_Eye/notRealImages/NotRealImagesRecord.txt","a+") as filename:
-                    filename.write(imageListData[3] + "\n")
-                sendTo("/Users/ferretdragon/Documents/Eye_to_Eye/notRealImages",imageListData[3])
+                print(currentImagePathway)
+                print(type(currentImagePathway))
+                with open(destination + "/movedImages.txt","a+") as filename:
+                    filename.write(currentImagePathway + "\n")
+                sendTo(destination,currentImagePathway)
+                cv.destroyAllWindows()
+                break
 
-# 1=left 2=right
-whenFeatureNotFound(2)
+manuallySortThroughImages(allContent)
 #cv.imshow("test_image",image)
 
