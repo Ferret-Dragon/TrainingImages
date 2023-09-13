@@ -3,8 +3,24 @@ import cv2 as cv
 import sys
 import os
 
-"""from src.trainingImages.FileOperationsFunction import sendTo"""
 from FileOperationsFunction import sendTo
+from enum import Enum
+
+class Mode(Enum):
+    SET_NUM_FACES = 1
+    FILTER_NO_FACES = 2
+
+mode = 0
+while not (mode==1 or mode==2):
+    print("Enter 1 to set and compare the number of faces.\nEnter 2 to filter out images with no faces")
+    mode = int(input())
+
+if(mode == 1):
+    setting = Mode.SET_NUM_FACES
+elif(mode == 2):
+    setting = Mode.FILTER_NO_FACES
+else:
+    setting = None
 
 fileLocationThatContainsImageData = ''
 
