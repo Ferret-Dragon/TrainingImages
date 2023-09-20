@@ -4,6 +4,7 @@ import sys
 import os
 
 from FileOperationsFunction import sendTo
+from testDirectory import searchDir
 from enum import Enum
 
 class Mode(Enum):
@@ -22,40 +23,29 @@ elif(mode == 2):
 else:
     setting = None
 
-fileLocationThatContainsImageData = ''
+directoryLocationThatContainsImages = ''
 
-while not os.path.exists(fileLocationThatContainsImageData):
+while not os.path.exists(directoryLocationThatContainsImages):
     # Data file should be the path to the txt file in which the image locations are stored
-    print("Enter the name of your image data file: ")
-    fileLocationThatContainsImageData = input()
-    if not os.path.exists(fileLocationThatContainsImageData):
+    print("Enter the name of your image data directory: ")
+    directoryLocationThatContainsImages = input()
+    if not os.path.exists(directoryLocationThatContainsImages):
         print("You source path does not exist")
 
+listOfImagesFromDirectory = []
+
+searchDir(directoryLocationThatContainsImages,listOfImagesFromDirectory)
 print("\nEnter your destination folder location: ")
 #The folder where we want to move the images into
 destination = input()
 
-allContent = []
-
-def addContentToList(file_path):
-    """Open data file, convert lines to lists, return list"""
-    tempFile = open(file_path)
-    tempList=[]
-    for line in tempFile:
-        tempList.append((ast.literal_eval(line)))
-    tempFile.close()
-    return tempList
-
-allContent = addContentToList(fileLocationThatContainsImageData)
-
 def manuallySortThroughImages(listOfImagesToFilterThrough):
     '''We are expecting to be passed a list of lists formated with features [[a,b,c, imageLocationPathway], ...]'''
-    for imageListData in allContent:
+    for imageLocation in listOfImagesToFilterThrough:
 
-        currentImagePathway = imageListData[3]
-        if not os.path.exists(currentImagePathway):
+        if not os.path.exists(imageLocation):
             continue
-        img = cv.imread(currentImagePathway)
+        img = cv.imread(imageLocation)
         cv.imshow("image", img)
 
         while 1:
@@ -64,14 +54,14 @@ def manuallySortThroughImages(listOfImagesToFilterThrough):
                 cv.destroyAllWindows()
                 break
             elif key == ord("m"):
-                print(currentImagePathway)
-                print(type(currentImagePathway))
+                print(imageLocation)
+                print(type(imageLocation))
                 with open(destination + "/movedImages.txt","a+") as filename:
-                    filename.write(currentImagePathway + "\n")
-                sendTo(destination,currentImagePathway)
+                    filename.write(imageLocation + "\n")
+                sendTo(destination,imageLocation)
                 cv.destroyAllWindows()
                 break
 
-manuallySortThroughImages(allContent)
+manuallySortThroughImages(listOfImagesFromDirectory)
 #cv.imshow("test_image",image)
 
