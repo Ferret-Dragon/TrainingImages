@@ -29,39 +29,44 @@ while not os.path.exists(directoryLocationThatContainsImages):
     # Data file should be the path to the txt file in which the image locations are stored
     print("Enter the name of your image data directory: ")
     directoryLocationThatContainsImages = input()
+
+    if directoryLocationThatContainsImages == "directory":
+        directoryLocationThatContainsImages = "/Users/ferretdragon/Documents/UMaskLFW"
     if not os.path.exists(directoryLocationThatContainsImages):
         print("You source path does not exist")
 
 listOfImagesFromDirectory = []
 
 searchDir(directoryLocationThatContainsImages,listOfImagesFromDirectory)
-print("\nEnter your destination folder location: ")
-#The folder where we want to move the images into
-destination = input()
 
-def manuallySortThroughImages(listOfImagesToFilterThrough):
-    '''We are expecting to be passed a list of lists formated with features [[a,b,c, imageLocationPathway], ...]'''
+if(mode == 2):
+    print("\nEnter your destination folder location: ")
+    #The folder where we want to move the images into
+    destination = input()
+
+def manuallySortThroughImages(listOfImagesToFilterThrough, listOfNumberOfFaces):
+    '''We are expecting to be passed a list of image pathways in the form of strings [[a,b,c, imageLocationPathway], ...]'''
     for imageLocation in listOfImagesToFilterThrough:
+        if setting == Mode.FILTER_NO_FACES:
+            if not os.path.exists(imageLocation):
+                continue
+            img = cv.imread(imageLocation)
+            cv.imshow("image", img)
+            while 1:
+                key = cv.waitKey(5000)
+                if key == -1 or key == ord("q"):
+                    cv.destroyAllWindows()
+                    break
+                elif key == ord("m"):
+                    print(imageLocation)
+                    print(type(imageLocation))
+                    with open(destination + "/movedImages.txt","a+") as filename:
+                        filename.write(imageLocation + "\n")
+                    sendTo(destination,imageLocation)
+                    cv.destroyAllWindows()
+                    break
 
-        if not os.path.exists(imageLocation):
-            continue
-        img = cv.imread(imageLocation)
-        cv.imshow("image", img)
-
-        while 1:
-            key = cv.waitKey(5000)
-            if key == -1 or key == ord("q"):
-                cv.destroyAllWindows()
-                break
-            elif key == ord("m"):
-                print(imageLocation)
-                print(type(imageLocation))
-                with open(destination + "/movedImages.txt","a+") as filename:
-                    filename.write(imageLocation + "\n")
-                sendTo(destination,imageLocation)
-                cv.destroyAllWindows()
-                break
-
-manuallySortThroughImages(listOfImagesFromDirectory)
+listOfListsAndNumsOfFaces = []
+manuallySortThroughImages(listOfImagesFromDirectory, listOfListsAndNumsOfFaces)
 #cv.imshow("test_image",image)
 
