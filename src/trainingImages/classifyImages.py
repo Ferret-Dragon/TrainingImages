@@ -47,24 +47,42 @@ if(mode == 2):
 def manuallySortThroughImages(listOfImagesToFilterThrough, listOfNumberOfFaces):
     '''We are expecting to be passed a list of image pathways in the form of strings [[a,b,c, imageLocationPathway], ...]'''
     for imageLocation in listOfImagesToFilterThrough:
-        if setting == Mode.FILTER_NO_FACES:
             if not os.path.exists(imageLocation):
                 continue
-            img = cv.imread(imageLocation)
-            cv.imshow("image", img)
-            while 1:
-                key = cv.waitKey(5000)
-                if key == -1 or key == ord("q"):
-                    cv.destroyAllWindows()
-                    break
-                elif key == ord("m"):
-                    print(imageLocation)
-                    print(type(imageLocation))
-                    with open(destination + "/movedImages.txt","a+") as filename:
-                        filename.write(imageLocation + "\n")
-                    sendTo(destination,imageLocation)
-                    cv.destroyAllWindows()
-                    break
+            if setting == Mode.SET_NUM_FACES:
+                listOfNumberOfFaces.append((imageLocation, setNumFacesProcess(imageLocation)))
+            if setting == Mode.FILTER_NO_FACES:
+                filterNoFacesProcess(imageLocation)
+
+def setNumFacesProcess(imageLocation)->int:
+    ''' Return an integer value telling how many faces we expect to see in each individual image location input'''
+    img = cv.imread(imageLocation)
+    cv.imshow(img)
+    while (1):
+        numOfFacesInImage = cv.waitKey()
+        try:
+            numOfFacesInImage = int(chr(numOfFacesInImage))
+            break
+        except:
+            print("Must be an integer input.")
+    return numOfFacesInImage
+
+def filterNoFacesProcess(imageLocation):
+    img = cv.imread(imageLocation)
+    cv.imshow("image", img)
+    while 1:
+        key = cv.waitKey(5000)
+        if key == -1 or key == ord("q"):
+            cv.destroyAllWindows()
+            break
+        elif key == ord("m"):
+            print(imageLocation)
+            print(type(imageLocation))
+            with open(destination + "/movedImages.txt","a+") as filename:
+                filename.write(imageLocation + "\n")
+            sendTo(destination,imageLocation)
+            cv.destroyAllWindows()
+            break
 
 listOfListsAndNumsOfFaces = []
 manuallySortThroughImages(listOfImagesFromDirectory, listOfListsAndNumsOfFaces)
