@@ -2,6 +2,7 @@ import ast
 import cv2 as cv
 import sys
 import os
+import csv
 
 from FileOperationsFunction import sendTo
 from testDirectory import searchDir
@@ -46,7 +47,7 @@ if(mode == 2):
 
 def manuallySortThroughImages(listOfImagesToFilterThrough, listOfNumberOfFaces):
     '''We are expecting to be passed a list of image pathways in the form of strings [[a,b,c, imageLocationPathway], ...]'''
-    for imageLocation in listOfImagesToFilterThrough:
+    for imageLocation in listOfImagesToFilterThrough[0:10]:
             if not os.path.exists(imageLocation):
                 continue
             if setting == Mode.SET_NUM_FACES:
@@ -57,11 +58,12 @@ def manuallySortThroughImages(listOfImagesToFilterThrough, listOfNumberOfFaces):
 def setNumFacesProcess(imageLocation)->int:
     ''' Return an integer value telling how many faces we expect to see in each individual image location input'''
     img = cv.imread(imageLocation)
-    cv.imshow(img)
+    cv.imshow(imageLocation, img)
     while (1):
         numOfFacesInImage = cv.waitKey()
         try:
             numOfFacesInImage = int(chr(numOfFacesInImage))
+            print(numOfFacesInImage)
             break
         except:
             print("Must be an integer input.")
@@ -86,5 +88,13 @@ def filterNoFacesProcess(imageLocation):
 
 listOfListsAndNumsOfFaces = []
 manuallySortThroughImages(listOfImagesFromDirectory, listOfListsAndNumsOfFaces)
+
+with open('ImageLocationsAndNumberOfFaces.csv', 'w+', newline='') as csvfile:
+    spamwriter = csv.writer(csvfile)#, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    #spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
+    #spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
+    #file = open("ImageLocationsAndNumberOfFaces.csv","w+")
+    for element in listOfListsAndNumsOfFaces:
+        spamwriter.writerow(element)
 #cv.imshow("test_image",image)
 
