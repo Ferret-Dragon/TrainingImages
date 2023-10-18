@@ -91,6 +91,8 @@ manuallySortThroughImages(listOfImagesFromDirectory, listOfListsAndNumsOfFaces)
 
 with open('ImageLocationsAndNumberOfFaces.csv', 'w+', newline='') as csvfile:
     spamwriter = csv.writer(csvfile)#, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    header = ["Image Location", "Number of Faces"]
+    spamwriter.writerow(header)
     #spamwriter.writerow(['Spam'] * 5 + ['Baked Beans'])
     #spamwriter.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
     #file = open("ImageLocationsAndNumberOfFaces.csv","w+")
